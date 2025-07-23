@@ -1,4 +1,5 @@
 import z from "zod";
+import { isActive, Role } from "./user.interface";
 
 export const createUserZodSchema = z.object({
   name: z
@@ -43,5 +44,8 @@ export const updateUserZodSchema = z.object({
     .regex(/^(?:\+880|880|0)1[3-9]\d{8}$/, "Invalid phone number")
     .optional(),
   address: z.string().optional(),
-  role: z.enum(Obje)
+  role: z.enum(Object.values(Role)).optional(),
+  isActive: z.enum(Object.values(isActive)).optional(),
+  isDeleted: z.boolean().optional(),
+  isVerified: z.boolean().optional()
 });
