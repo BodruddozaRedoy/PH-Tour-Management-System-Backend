@@ -2,17 +2,15 @@ import { Server } from "http";
 import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./app/config/env";
+import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
 
 const startServer = async () => {
   try {
-    await mongoose.connect(
-      envVars.DB_URL!,
-      {
-        dbName: "tourManagementDB",
-      }
-    );
+    await mongoose.connect(envVars.DB_URL!, {
+      dbName: "tourManagementDB",
+    });
 
     console.log("Connected to DB!!");
 
@@ -24,8 +22,10 @@ const startServer = async () => {
   }
 };
 
-
-startServer();
+(async () => {
+  await startServer();
+  await seedSuperAdmin();
+})();
 
 process.on("SIGTERM", () => {
   console.log("SIGTERM Signal Received. Server Shutting Down...");
@@ -57,4 +57,3 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-// Promise.reject(new Error(""))
