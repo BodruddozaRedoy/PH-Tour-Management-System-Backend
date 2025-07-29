@@ -1,8 +1,6 @@
-import  httpStatus  from 'http-status-codes';
 import express, { Request, Response } from "express";
 import cors from 'cors'
 import { router } from "./app/routes";
-import { envVars } from "./app/config/env";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import { notFound } from './app/middlewares/notFound';
 const app = express();
