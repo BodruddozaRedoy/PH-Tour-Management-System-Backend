@@ -1,11 +1,8 @@
-import { IsActive, IUser } from "../user/user.interface";
+import { IUser } from "../user/user.interface";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.model";
 import AppError from "../../errorHelpers/AppError";
 import bcrypt from "bcrypt";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import { generateToken, verifyToken } from "../../utils/jwt";
-import { envVars } from "../../config/env";
 import { createNewAccessTokenWithRefreshToken, createUserTokens } from "../../utils/userTokens";
 
 const credentialsLogin = async (payload: Partial<IUser>) => {
