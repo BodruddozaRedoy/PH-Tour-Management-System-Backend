@@ -5,6 +5,8 @@ import { sendResponse } from "../../utils/sendResponse";
 import { AuthServices } from "./auth.service";
 import AppError from "../../errorHelpers/AppError";
 import { setAuthCookie } from "../../utils/setCookie";
+import { createUserTokens } from "../../utils/userTokens";
+import { envVars } from "../../config/env";
 
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -64,8 +66,8 @@ const logout = catchAsync(
 const resetPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user;
-    console.log(decodedToken, "token")
-console.log(req.body)
+    console.log(decodedToken, "token");
+    console.log(req.body);
     const oldPass = req.body.oldPass;
     const newPass = req.body.newPass;
 
@@ -80,9 +82,24 @@ console.log(req.body)
   }
 );
 
+const googleCallbackController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    console.log(user)
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+    const tokenInfo = createUserTokens(user);
+
+    setAuthCookie(res, tokenInfo);
+    res.redirect(envVars.FRONTEND_URL);
+  }
+);
+
 export const AuthControllers = {
   credentialsLogin,
   getNewAccessToken,
   logout,
   resetPassword,
+  googleCallbackController,
 };
