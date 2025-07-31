@@ -69,7 +69,7 @@ console.log(req.body)
     const oldPass = req.body.oldPass;
     const newPass = req.body.newPass;
 
-    await AuthServices.resetPassword(oldPass, newPass, decodedToken);
+    await AuthServices.resetPassword(oldPass, newPass, decodedToken!);
 
     sendResponse(res, {
       success: true,
