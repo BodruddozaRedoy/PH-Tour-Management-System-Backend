@@ -3,30 +3,18 @@ import { IsActive, Role } from "./user.interface";
 
 export const createUserZodSchema = z.object({
     name: z
-        .string({ invalid_type_error: "Name must be string" })
+        .string({ message: "Name must be a string" })
         .min(2, { message: "Name must be at least 2 characters long." })
         .max(50, { message: "Name cannot exceed 50 characters." }),
-    // name: z.object({
-    //     firstName: z.string({ invalid_type_error: "Name must be string" })
-    //         .min(2, { message: "Name must be at least 2 characters long." })
-    //         .max(50, { message: "Name cannot exceed 50 characters." }),
-    //     lastName: z.object({
-    //         nickName: z.string({ invalid_type_error: "Name must be string" })
-    //             .min(2, { message: "Name must be at least 2 characters long." })
-    //             .max(50, { message: "Name cannot exceed 50 characters." }),
 
-    //         surName: z.string({ invalid_type_error: "Name must be string" })
-    //             .min(2, { message: "Name must be at least 2 characters long." })
-    //             .max(50, { message: "Name cannot exceed 50 characters." }),
-    //     })
-    // }),
     email: z
-        .string({ invalid_type_error: "Email must be string" })
+        .string({ message: "Email must be a string" })
         .email({ message: "Invalid email address format." })
         .min(5, { message: "Email must be at least 5 characters long." })
         .max(100, { message: "Email cannot exceed 100 characters." }),
+
     password: z
-        .string({ invalid_type_error: "Password must be string" })
+        .string({ message: "Password must be a string" })
         .min(8, { message: "Password must be at least 8 characters long." })
         .regex(/^(?=.*[A-Z])/, {
             message: "Password must contain at least 1 uppercase letter.",
@@ -37,43 +25,54 @@ export const createUserZodSchema = z.object({
         .regex(/^(?=.*\d)/, {
             message: "Password must contain at least 1 number.",
         }),
+
     phone: z
-        .string({ invalid_type_error: "Phone Number must be string" })
+        .string({ message: "Phone Number must be a string" })
         .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-            message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+            message:
+                "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
         })
         .optional(),
+
     address: z
-        .string({ invalid_type_error: "Address must be string" })
+        .string({ message: "Address must be a string" })
         .max(200, { message: "Address cannot exceed 200 characters." })
-        .optional()
-})
+        .optional(),
+});
+
 export const updateUserZodSchema = z.object({
     name: z
-        .string({ invalid_type_error: "Name must be string" })
+        .string({ message: "Name must be a string" })
         .min(2, { message: "Name must be at least 2 characters long." })
-        .max(50, { message: "Name cannot exceed 50 characters." }).optional(),
+        .max(50, { message: "Name cannot exceed 50 characters." })
+        .optional(),
+
     phone: z
-        .string({ invalid_type_error: "Phone Number must be string" })
+        .string({ message: "Phone Number must be a string" })
         .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-            message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+            message:
+                "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
         })
         .optional(),
+
     role: z
-        // .enum(["ADMIN", "GUIDE", "USER", "SUPER_ADMIN"])
         .enum(Object.values(Role) as [string])
         .optional(),
+
     isActive: z
         .enum(Object.values(IsActive) as [string])
         .optional(),
+
     isDeleted: z
-        .boolean({ invalid_type_error: "isDeleted must be true or false" })
+        .boolean({ message: "isDeleted must be true or false" })
         .optional(),
+
     isVerified: z
-        .boolean({ invalid_type_error: "isVerified must be true or false" })
+        .boolean({ message: "isVerified must be true or false" })
         .optional(),
+
     address: z
-        .string({ invalid_type_error: "Address must be string" })
+        .string({ message: "Address must be a string" })
         .max(200, { message: "Address cannot exceed 200 characters." })
-        .optional()
-})
+        .optional(),
+});
