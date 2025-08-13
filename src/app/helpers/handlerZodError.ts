@@ -6,9 +6,6 @@ export const handlerZodError = (err: any): TGenericErrorResponse => {
 
     err.issues.forEach((issue: any) => {
         errorSources.push({
-            //path : "nickname iside lastname inside name"
-            // path: issue.path.length > 1 && issue.path.reverse().join(" inside "),
-
             path: issue.path[issue.path.length - 1],
             message: issue.message
         })
