@@ -169,12 +169,15 @@ const forgotPassword = catchAsync(async (req: Request, res: Response, next: Next
         data: null,
     })
 })
+
 const googleCallbackController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     let redirectTo = req.query.state ? req.query.state as string : ""
 
     if (redirectTo.startsWith("/")) {
         redirectTo = redirectTo.slice(1)
+    }else{
+        redirectTo = ""
     }
 
     // /booking => booking , => "/" => ""
@@ -187,13 +190,6 @@ const googleCallbackController = catchAsync(async (req: Request, res: Response, 
     const tokenInfo = createUserTokens(user)
 
     setAuthCookie(res, tokenInfo)
-
-    // sendResponse(res, {
-    //     success: true,
-    //     statusCode: httpStatus.OK,
-    //     message: "Password Changed Successfully",
-    //     data: null,
-    // })
 
     res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
 })
