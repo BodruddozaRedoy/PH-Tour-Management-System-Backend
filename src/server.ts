@@ -11,7 +11,9 @@ let server: Server;
 
 const startServer = async () => {
     try {
-        await mongoose.connect(envVars.DB_URL)
+        await mongoose.connect(envVars.DB_URL, {
+            dbName: "PhTourDB"
+        })
 
         console.log("Connected to DB!!");
 

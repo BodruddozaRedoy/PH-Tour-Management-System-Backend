@@ -1,0 +1,1118 @@
+{
+  "info": {
+    "name": "PH Tour Management System",
+    "description": "Complete API collection for PH Tour Management System with authentication, user management, tour management, booking, payments, and more.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "ph-tour-management-system-2024"
+  },
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data.accessToken) {",
+                  "        pm.environment.set(\"access_token\", response.data.accessToken);",
+                  "        pm.environment.set(\"refresh_token\", response.data.refreshToken);",
+                  "        if (response.data.user) {",
+                  "            pm.environment.set(\"user_id\", response.data.user.id);",
+                  "        }",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Refresh Access Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/refresh-token",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "refresh-token"]
+            }
+          }
+        },
+        {
+          "name": "User Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Google OAuth Login",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/google?redirect=/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "google"],
+              "query": [
+                {
+                  "key": "redirect",
+                  "value": "/dashboard"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"oldpassword123\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "reset-password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 User Management",
+      "item": [
+        {
+          "name": "User Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"+1234567890\",\n  \"address\": \"123 Main St, City, Country\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/user/register",
+              "host": ["{{base_url}}"],
+              "path": ["user", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/me",
+              "host": ["{{base_url}}"],
+              "path": ["user", "me"]
+            }
+          }
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Smith\",\n  \"phone\": \"+1987654321\",\n  \"address\": \"456 Oak Ave, City, Country\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/user/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["user", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/all-users?page=1&limit=10&searchTerm=&sort=-createdAt",
+              "host": ["{{base_url}}"],
+              "path": ["user", "all-users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "searchTerm",
+                  "value": ""
+                },
+                {
+                  "key": "sort",
+                  "value": "-createdAt"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single User (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["user", "{{user_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏖️ Tour Management",
+      "item": [
+        {
+          "name": "Get All Tours",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tour?page=1&limit=10&searchTerm=&sort=-createdAt",
+              "host": ["{{base_url}}"],
+              "path": ["tour"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "searchTerm",
+                  "value": ""
+                },
+                {
+                  "key": "sort",
+                  "value": "-createdAt"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Tour (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Beautiful Beach Tour",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Experience the most beautiful beaches",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "Maldives",
+                  "type": "text"
+                },
+                {
+                  "key": "costFrom",
+                  "value": "1500",
+                  "type": "text"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2024-06-01",
+                  "type": "text"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-06-07",
+                  "type": "text"
+                },
+                {
+                  "key": "departureLocation",
+                  "value": "Dhaka",
+                  "type": "text"
+                },
+                {
+                  "key": "arrivalLocation",
+                  "value": "Male",
+                  "type": "text"
+                },
+                {
+                  "key": "maxGuest",
+                  "value": "20",
+                  "type": "text"
+                },
+                {
+                  "key": "minAge",
+                  "value": "18",
+                  "type": "text"
+                },
+                {
+                  "key": "division",
+                  "value": "{{division_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "tourType",
+                  "value": "{{tour_type_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "included",
+                  "value": "[\"Hotel\", \"Meals\", \"Transport\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "excluded",
+                  "value": "[\"Airfare\", \"Visa\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "amenities",
+                  "value": "[\"WiFi\", \"Pool\", \"Spa\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "tourPlan",
+                  "value": "[\"Day 1: Arrival\", \"Day 2: Beach Visit\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/tour/create",
+              "host": ["{{base_url}}"],
+              "path": ["tour", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get Tour by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tour/beautiful-beach-tour",
+              "host": ["{{base_url}}"],
+              "path": ["tour", "beautiful-beach-tour"]
+            }
+          }
+        },
+        {
+          "name": "Update Tour (Admin Only)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Updated Beach Tour",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated description",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/tour/{{tour_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tour", "{{tour_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Tour (Admin Only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tour/{{tour_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tour", "{{tour_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get All Tour Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tour/tour-types",
+              "host": ["{{base_url}}"],
+              "path": ["tour", "tour-types"]
+            }
+          }
+        },
+        {
+          "name": "Create Tour Type (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Adventure Tour\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tour/create-tour-type",
+              "host": ["{{base_url}}"],
+              "path": ["tour", "create-tour-type"]
+            }
+          }
+        },
+        {
+          "name": "Update Tour Type (Admin Only)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Extreme Adventure Tour\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tour/tour-types/{{tour_type_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tour", "tour-types", "{{tour_type_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Tour Type (Admin Only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tour/tour-types/{{tour_type_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tour", "tour-types", "{{tour_type_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📅 Booking Management",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tour\": \"{{tour_id}}\",\n  \"guestCount\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/booking",
+              "host": ["{{base_url}}"],
+              "path": ["booking"]
+            }
+          }
+        },
+        {
+          "name": "Get User's Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/booking/my-bookings?page=1&limit=10&status=",
+              "host": ["{{base_url}}"],
+              "path": ["booking", "my-bookings"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Bookings (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/booking?page=1&limit=10&status=&user=&tour=",
+              "host": ["{{base_url}}"],
+              "path": ["booking"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": ""
+                },
+                {
+                  "key": "user",
+                  "value": ""
+                },
+                {
+                  "key": "tour",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Booking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/booking/{{booking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["booking", "{{booking_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Booking Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/booking/{{booking_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["booking", "{{booking_id}}", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 Payment Processing",
+      "item": [
+        {
+          "name": "Initialize Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerName\": \"John Doe\",\n  \"customerEmail\": \"john@example.com\",\n  \"customerPhone\": \"+1234567890\",\n  \"customerAddress\": \"123 Main St, City, Country\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/init-payment/{{booking_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "init-payment", "{{booking_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Payment Success Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tran_id\": \"SSL123456789\",\n  \"status\": \"VALID\",\n  \"val_id\": \"240115123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/success",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "success"]
+            }
+          }
+        },
+        {
+          "name": "Payment Failure Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tran_id\": \"SSL123456789\",\n  \"status\": \"FAILED\",\n  \"error\": \"Payment failed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/fail",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "fail"]
+            }
+          }
+        },
+        {
+          "name": "Payment Cancellation Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tran_id\": \"SSL123456789\",\n  \"status\": \"CANCELLED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "cancel"]
+            }
+          }
+        },
+        {
+          "name": "Validate Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tran_id\": \"SSL123456789\",\n  \"val_id\": \"240115123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/validate-payment",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "validate-payment"]
+            }
+          }
+        },
+        {
+          "name": "Download Invoice",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/payment/invoice/{{payment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "invoice", "{{payment_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🗺️ Division Management",
+      "item": [
+        {
+          "name": "Get All Divisions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/division",
+              "host": ["{{base_url}}"],
+              "path": ["division"]
+            }
+          }
+        },
+        {
+          "name": "Create Division (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Dhaka Division",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Capital city division",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/division/create",
+              "host": ["{{base_url}}"],
+              "path": ["division", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get Division by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/division/dhaka-division",
+              "host": ["{{base_url}}"],
+              "path": ["division", "dhaka-division"]
+            }
+          }
+        },
+        {
+          "name": "Update Division (Admin Only)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Updated Dhaka Division",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated description",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/division/{{division_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["division", "{{division_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Division (Admin Only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/division/{{division_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["division", "{{division_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Statistics & Analytics",
+      "item": [
+        {
+          "name": "Booking Statistics (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/stats/booking?startDate=2024-01-01&endDate=2024-12-31",
+              "host": ["{{base_url}}"],
+              "path": ["stats", "booking"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-12-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Payment Statistics (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/stats/payment?startDate=2024-01-01&endDate=2024-12-31",
+              "host": ["{{base_url}}"],
+              "path": ["stats", "payment"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-12-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "User Statistics (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/stats/user",
+              "host": ["{{base_url}}"],
+              "path": ["stats", "user"]
+            }
+          }
+        },
+        {
+          "name": "Tour Statistics (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/stats/tour",
+              "host": ["{{base_url}}"],
+              "path": ["stats", "tour"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔐 OTP Verification",
+      "item": [
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/send",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "send"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/verify",
+              "host": ["{{base_url}}"],
+              "path": ["otp", "verify"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-add Authorization header for protected routes",
+          "if (pm.environment.get(\"access_token\")) {",
+          "    pm.request.headers.add({",
+          "        key: \"Authorization\",",
+          "        value: \"Bearer \" + pm.environment.get(\"access_token\")",
+          "    });",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000/api/v1",
+      "type": "string"
+    }
+  ]
+}
