@@ -65,7 +65,7 @@ const getMe = catchAsync(
 
     sendResponse(res, {
       success: true,
-      statusCode: httpStatus.CREATED,
+      statusCode: httpStatus.OK,
       message: "Your profile Retrieved Successfully",
       data: result.data,
     });
