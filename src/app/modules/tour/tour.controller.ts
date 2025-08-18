@@ -4,6 +4,7 @@ import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { TourService } from './tour.service';
 import { ITour } from './tour.interface';
+import AppError from '../../errorHelpers/AppError';
 
 const createTour = catchAsync(async (req: Request, res: Response) => {
     const payload: ITour = {
@@ -88,6 +89,7 @@ const getAllTourTypes = catchAsync(async (req: Request, res: Response) => {
 
 const createTourType = catchAsync(async (req: Request, res: Response) => {
     const { name } = req.body;
+    
     const result = await TourService.createTourType(name);
     sendResponse(res, {
         statusCode: 201,
